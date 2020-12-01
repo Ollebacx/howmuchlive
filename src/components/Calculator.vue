@@ -1,7 +1,16 @@
 <template>
-  <v-container class="max">
-    <v-row class="text-center">
-      <v-col cols="12">
+  <v-container class="max elevation-18">
+    <v-app-bar
+      flat
+      floating
+      justify="center"
+      class="mb-5 navbar"
+      color="transparent"
+    >
+      <h1 class="name"><b>LifePay</b><span class="light">Calculator</span></h1>
+    </v-app-bar>
+    <v-row class="mb-n3">
+      <v-col cols="12" class="mb-n8">
         <!-- <v-text-field
                   label="Amount"
                   solo
@@ -11,56 +20,93 @@
                   clearable
                   @keypress="validate(event)"
                 ></v-text-field> -->
-                <p>How much money does it cost?</p>
-      <vuetify-money
-        class="text-right"
-        v-model="amount"
-        :options="options"
-        :properties="propertiesAmount"
-        :clearable="clearable"
-        placeholder="1200"
-        autofocus=true
-       />
+        <p>Total price</p>
+      </v-col>
+      <v-col cols="12">
+        <vuetify-money
+          class="inputMoney first"
+          v-model="amount"
+          :options="options"
+          :properties="propertiesAmount"
+          placeholder="e.g. 800"
+          outlined
+        />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" class="mb-n8">
+        <p>Your salary</p>
+      </v-col>
+      <v-col cols="12">
+        <vuetify-money
+          class="inputMoney mb-n6"
+          v-model="salary"
+          :options="options"
+          :properties="propertiesSalary"
+          :clearable="clearable"
+          placeholder="e.g. 20"
+          outlined
+        />
+        <v-chip-group
+          active-class="primary--text elevation-8"
+          column
+          center-active
+          mandatory
+          v-model="salaryOption"
+          class="visible"
+        >
+          <v-chip v-for="(item, idx) in itemsSalary" :key="idx" filter outlined>
+            {{ item }}
+          </v-chip>
+        </v-chip-group>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" class="mb-n8">
+        <p>Hours you work</p>
       </v-col>
 
-        <v-col cols="12" class="mb-0 pb-0">
-          <p>How much is your income?</p>
+      <v-col cols="12">
         <vuetify-money
-          class="text-right mb-0 pb-0"
-          v-model="salary"
+          class="inputMoney mb-n6"
+          v-model="hours"
           :options="options"
-          :properties="propertiesSalary"
+          :properties="propertiesHours"
           :clearable="clearable"
-          :placeholder="placeholder"
+          placeholder="e.g. 8"
+          outlined
+          rounded
         />
-        <v-select
-          id="textComputer"
-          class="purple darken-2 px-3 mt-0 pt-0"
+        <!-- <v-select
           :items="items"
           v-model="salarySelection"
-        ></v-select>
-        </v-col>
-
-        <v-col cols="12" class="mb-0 pb-0">
-          <p>How many hours you work?
-</p>
-        <vuetify-money
-          class="text-right mb-0 pb-0"
-          v-model="salary"
-          :options="options"
-          :properties="propertiesSalary"
-          :clearable="clearable"
-          :placeholder="placeholder"
-        />
-        <v-select
-          id="textComputer"
-          class="purple darken-2 px-3 mt-0 pt-0"
-          :items="items"
-          v-model="salarySelection"
-        ></v-select>
-        </v-col>
-
-  </v-row>
+          dense
+          rounded
+          outlined
+          chips
+          tags
+        ></v-select> -->
+        <v-chip-group
+          active-class="primary--text elevation-8"
+          column
+          mandatory
+          v-model="hourOption"
+          class="visible"
+        >
+          <v-chip v-for="(item, idx) in itemsHours" :key="idx" filter outlined>
+            {{ item }}
+          </v-chip>
+        </v-chip-group>
+      </v-col>
+    </v-row>
+    <v-btn
+      class="btn py-6 mb-3 elevation-12"
+      rounded
+      block
+      dark
+      @click="calculate()"
+      >Calculate</v-btn
+    >
   </v-container>
 </template>
 
@@ -69,38 +115,44 @@ export default {
   name: "Calculator",
   data: () => ({
     amount: "",
-    salary:"",
-    salarySelection: "monthly",
-    items: ["yearly","monthly","daily", "hourly"],
-    placeholder: "",
-    readonly: false,
-    disabled: false,
-    outlined: true,
+    salary: "",
+    itemsSalary: ["hourly", "monthly", "yearly"],
+    salaryOption: "",
+    hours: "",
+    itemsHours: ["daily", "weekly", "monthly"],
+    hourOption: "",
     clearable: true,
-    valueWhenIsEmpty: "",
     options: {
       locale: "fr-FR",
       prefix: "",
       suffix: "",
       length: 9,
-      precision: 0
+      precision: 0,
     },
     propertiesAmount: {
-      // hint: "How much money does it cost?",
-      // "persistent-hint":true,
-      "append-icon": "mdi-currency-eur",
-      // solo: true
-      // You can add other v-text-field properties, here.
+      autofocus: true,
     },
     propertiesSalary: {
-      "append-icon": "mdi-arrow-down-bold-box",
-      // You can add other v-text-field properties, here.
+      "prepend-inner-icon": "mdi-cash",
+      rounded: true,
+    },
+    propertiesHours: {
+      "prepend-inner-icon": "mdi-clock",
+      rounded: true,
     },
   }),
   methods: {
+    calculate() {
+      console.log(
+        this.amount,
+        this.salary,
+        this.itemsSalary[this.salaryOption],
+        this.hours,
+        this.itemsHours[this.hourOption]
+      );
+    },
     // validate(content) {
     //   var theEvent = content || window.event;
-
     //   // Handle paste
     //   if (theEvent.type === 'paste') {
     //       key = event.clipboardData.getData('text/plain');
@@ -120,13 +172,69 @@ export default {
 </script>
 
 <style scoped>
-.max{
+.max {
   max-width: 400px;
+  background-color: #e9edf1;
+  border-radius: 30px;
+  padding: 3vh 2vw;
+  margin: 4vh auto;
+  border: 1px solid blue;
 }
-.text-right {
-  direction: rtl;
+.navbar {
+  height: 7vh !important;
+  justify-content: center;
+  align-items: flex-end;
+  text-align: center;
 }
-#textComputer {
-  font-size: 24px !important;
+.name {
+  font-size: 2.2em;
+  /* background-color: blue; */
+  width: 400px;
+}
+.light {
+  font-weight: 400;
+  color: rgb(31, 31, 31);
+}
+p {
+  font-size: 1.2em;
+  font-weight: 400;
+}
+.inputMoney >>> input {
+  /* font-family: "Teko", sans-serif; */
+  font-size: 1.6em;
+  color: blue !important;
+  font-weight: 400;
+  padding: 15px;
+}
+.first >>> input {
+  /* font-family: "Teko", sans-serif; */
+  font-size: 3.6em;
+  color: blue !important;
+  font-weight: 500;
+  min-height: 80px !important;
+  text-align: right;
+  padding: 20px;
+}
+.visible {
+  background-color: red;
+  height: 70px;
+  width: 100%;
+}
+.v-chip.v-chip--outlined.v-chip.v-chip {
+  padding: 20px;
+  margin: 0px 10px 0px 0px !important;
+  border-radius: 50px !important;
+  opacity: 0.5;
+  background-color: blue !important;
+  color: white !important;
+}
+.primary--text {
+  opacity: 1 !important;
+}
+.btn {
+  /* background-image: linear-gradient( 170deg, #00fff2 10%, #003cff 100%); */
+  background-color: blue !important;
+  color: white;
+  font-weight: 900 !important;
 }
 </style>
