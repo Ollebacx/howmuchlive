@@ -1,15 +1,14 @@
 <template>
-  <v-container class="max elevation-18">
-    <v-app-bar
+  <v-container class="max mt-n9">
+    <!-- elevation-18 -->
+    <!-- <v-app-bar
       flat
-      floating
-      justify="center"
       class="mb-5 navbar"
       color="transparent"
     >
       <h1 class="name"><b>LifePay</b><span class="light">Calculator</span></h1>
-    </v-app-bar>
-    <v-row class="mb-n3">
+    </v-app-bar> -->
+    <v-row class="mb-n8 pa-3">
       <v-col cols="12" class="mb-n8">
         <!-- <v-text-field
                   label="Amount"
@@ -33,7 +32,7 @@
         />
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="pa-3">
       <v-col cols="12" class="mb-n8">
         <p>Your salary</p>
       </v-col>
@@ -61,7 +60,7 @@
         </v-chip-group>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="pa-3">
       <v-col cols="12" class="mb-n8">
         <p>Hours you work</p>
       </v-col>
@@ -102,8 +101,9 @@
     <v-btn
       class="btn py-6 mb-3 elevation-12"
       rounded
-      block
       dark
+      block
+      x-large
       @click="calculate()"
       >Calculate</v-btn
     >
@@ -116,11 +116,13 @@ export default {
   data: () => ({
     amount: "",
     salary: "",
-    itemsSalary: ["hourly", "monthly", "yearly"],
+    itemsSalary: ["hourly", "daily", "monthly", "yearly"],
     salaryOption: "",
     hours: "",
     itemsHours: ["daily", "weekly", "monthly"],
     hourOption: "",
+    salaryPerHour: "",
+    dailyHours:"",
     clearable: true,
     options: {
       locale: "fr-FR",
@@ -150,6 +152,24 @@ export default {
         this.hours,
         this.itemsHours[this.hourOption]
       );
+      if (this.salary) {
+        if (
+          (this.itemsSalary[this.salaryOption] === this.itemsSalary[0]) ===
+          "hourly"
+        ) {
+          this.salaryPerHour = this.salary;
+        } else if (
+          (this.itemsSalary[this.salaryOption] === this.itemsSalary[1]) ===
+          "daily"
+        ) {
+          this.salaryPerHour = this.salary / this.dailyHours;
+        } else if (
+          (this.itemsSalary[this.salaryOption] === this.itemsSalary[1]) ===
+          "monthly"
+        ) {
+          this.salaryPerHour = (this.salary / 22) / this.dailyHours;
+        }
+      }
     },
     // validate(content) {
     //   var theEvent = content || window.event;
@@ -173,27 +193,31 @@ export default {
 
 <style scoped>
 .max {
-  max-width: 400px;
-  background-color: #e9edf1;
-  border-radius: 30px;
-  padding: 3vh 2vw;
-  margin: 4vh auto;
-  border: 1px solid blue;
+  max-width: 450px;
+  width: 100vw;
+  background-color: #e9edf1f8;
+  /* border-radius: 30px; */
+  padding: 3vh 1vw;
+  /* margin: 4vh; */
+  /* border: 1px solid blue; */
 }
 .navbar {
-  height: 7vh !important;
+  height: 50px !important;
   justify-content: center;
   align-items: flex-end;
   text-align: center;
 }
 .name {
-  font-size: 2.2em;
+  font-size: 2.8em;
   /* background-color: blue; */
   width: 400px;
+  color:blue;
+  font-weight: 800;
 }
 .light {
   font-weight: 400;
-  color: rgb(31, 31, 31);
+  color:blue;
+  /* color: rgb(31, 31, 31); */
 }
 p {
   font-size: 1.2em;
@@ -216,7 +240,7 @@ p {
   padding: 20px;
 }
 .visible {
-  background-color: red;
+  /* background-color: red; */
   height: 70px;
   width: 100%;
 }
@@ -232,9 +256,12 @@ p {
   opacity: 1 !important;
 }
 .btn {
-  /* background-image: linear-gradient( 170deg, #00fff2 10%, #003cff 100%); */
+  /* background-image: linear-gradient( 170deg, rgb(190, 1, 190) 10%, blue 100%); */
   background-color: blue !important;
   color: white;
   font-weight: 900 !important;
+}
+.btn:active {
+  box-shadow: none !important;
 }
 </style>
